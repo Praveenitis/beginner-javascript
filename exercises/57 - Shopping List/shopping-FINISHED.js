@@ -31,15 +31,17 @@ function displayItems() {
     .map(
       item => `<li class="shopping-item">
       <input
+        id="item-${item.id}"
         value="${item.id}"
         type="checkbox"
-        ${item.complete && 'checked'}
-      >
+        name="item-${item.id}"
+        ${item.complete ? 'checked' : ''}
+      />
       <span class="itemName">${item.name}</span>
       <button
         aria-label="Remove ${item.name}"
         value="${item.id}"
-      >&times;</buttonaria-label="Remove>
+      >&times;</button>
   </li>`
     )
     .join('');
@@ -54,18 +56,15 @@ function mirrorToLocalStorage() {
 function restoreFromLocalStorage() {
   console.info('Restoring from LS');
   // pull the items from LS
-  const lsItems = JSON.parse(localStorage.getItem('items'));
+  const lsItems = JSON.parse(localStorage.getItem('items')) || [];
   if (lsItems.length) {
-    // items = lsItems;
-    // lsItems.forEach(item => items.push(item));
-    // items.push(lsItems[0], lsItems[1]);
-    items.push(...lsItems);
+    items = lsItems;
     list.dispatchEvent(new CustomEvent('itemsUpdated'));
   }
 }
 
 function deleteItem(id) {
-  console.log('DELETIENG ITEM', id);
+  console.log('DELETING ITEM', id);
   // update our items array without this one
   items = items.filter(item => item.id !== id);
   console.log(items);
